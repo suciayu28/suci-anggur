@@ -58,7 +58,7 @@
         @yield('content')
         {{-- end main content --}}
 
-        
+
         {{-- start footer --}}
         @include('layouts.admin.footer')
         {{-- end footer --}}
@@ -68,5 +68,4 @@
     @include('layouts.admin.js')
     {{-- end js --}}
 </body>
-
 </html>
