@@ -1,9 +1,8 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -12,7 +11,7 @@ class UserController extends Controller
      */
     public function index()
     {
-          $data['dataUser'] = User::all();
+        $data['dataUser'] = User::all();
         return view('admin.user.index', $data);
     }
 
@@ -21,7 +20,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view ('admin.user.create');
+        return view('admin.user.create');
     }
 
     /**
@@ -30,8 +29,8 @@ class UserController extends Controller
     public function store(Request $request)
     {
 
-        $data['name'] = $request->name;
-        $data['email'] = $request->email;
+        $data['name']     = $request->name;
+        $data['email']    = $request->email;
         $data['password'] = $request->password;
 
         User::create($data);
@@ -52,15 +51,26 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $data['dataUser'] = User::findOrFail($id);
+        return view('admin.user.edit', $data);
     }
-
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
     {
-        //
+        $user = User::findOrFail($id);
+
+        $user->name  = $request->name;
+        $user->email = $request->email;
+        // Jika password kosong → jangan update
+        if ($request->password) {
+            $user->password = bcrypt($request->password);
+        }
+        $user->save();
+
+        return redirect()->route('user.index')
+            ->with('update', 'Data berhasil diupdate!');
     }
 
     /**
