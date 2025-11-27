@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pelanggan;
+use App\Models\PelangganFile;
 use Illuminate\Http\Request;
 
 class PelangganController extends Controller
@@ -61,29 +62,53 @@ class PelangganController extends Controller
      */
     public function edit(string $id)
     {
-        $data['dataPelanggan'] = Pelanggan::findOrFail($id);
+        $data['dataPelanggan'] = Pelanggan::with('files')->findOrFail($id);
         return view('admin.pelanggan.edit', $data);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
-        $pelanggan_id = $id;
-        $pelanggan = pelanggan::findOrFail($pelanggan_id);
+    public function update (Request $request, string $id)
+{
+    $pelanggan = Pelanggan::findOrFail($id);
 
-        $pelanggan->first_name = $request->first_name;
-        $pelanggan->last_name = $request->last_name;
-        $pelanggan->birthday = $request->birthday;
-        $pelanggan->gender = $request->gender;
-        $pelanggan->email = $request->email;
-        $pelanggan->phone = $request->phone;
+    $request->validate([
+        'first_name' => 'required',
+        'last_name' => 'required',
+        'birthday' => 'nullable|date',
+        'gender' => 'nullable',
+        'email' => 'required|email',
+        'phone' => 'nullable',
+        // Validasi untuk multiple files
+        'files.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+    ]);
 
-        $pelanggan->save();
-        return redirect()->route('pelanggan.index')->with('update', 'perubahan data berhasil!');
+    // UPDATE DATA TEXT
+    $pelanggan->update([
+        'first_name' => $request->first_name,
+        'last_name' => $request->last_name,
+        'birthday' => $request->birthday,
+        'gender' => $request->gender,
+        'email' => $request->email,
+        'phone' => $request->phone,
+    ]);
+
+    // UPLOAD MULTIPLE FILES
+    if ($request->hasFile('files')) {
+        foreach ($request->file('files') as $file) {
+            $path = $file->store('pelanggan_files', 'public');
+            PelangganFile::create([
+                'pelanggan_id' => $pelanggan->pelanggan_id,
+                'file_path' => $path,
+            ]);
+        }
     }
 
+    return redirect()
+        ->route('pelanggan.show', $pelanggan->pelanggan_id)
+        ->with('update', 'Perubahan Data Berhasil!');
+}
     /**
      * Remove the specified resource from storage.
      */

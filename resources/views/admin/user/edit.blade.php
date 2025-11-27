@@ -144,7 +144,15 @@
                                                     class="form-control">
                                                 <small class="text-muted">Kosongkan jika tidak ingin mengganti.</small>
                                             </div>
-
+                                            {{-- foto profil --}}
+                                            <div class="mb-3">
+                                                <label>Foto Profil</label>
+                                                <input type="file" name="profile_photo" class="form-control">
+                                                @if ($dataUser->profile_photo)
+                                                    <img src="{{ asset('storage/profile/' . $dataUser->profile_photo) }}"
+                                                        width="80" class="mt-2 rounded-circle">
+                                                @endif
+                                            </div>
                                             <!-- Buttons -->
                                             <div class="mb-3">
                                                 <button type="submit" class="btn btn-primary">Simpan</button>
@@ -436,7 +444,7 @@
                     <p class="mb-0">Form untuk mengedit data User.</p>
                 </div>
                 <div>
-                    <a href="{{ route('User.index') }}" class="btn btn-primary"><i
+                    <a href="{{ route('user.index') }}" class="btn btn-primary"><i
                             class="far fa-question-circle me-1"></i> Kembali</a>
                 </div>
             </div>
@@ -446,75 +454,44 @@
             <div class="col-12 mb-4">
                 <div class="card border-0 shadow components-section">
                     <div class="card-body">
-                        <form action="{{ route('User.update', $dataUser->User_id) }}" method="POST">
+                        <form action="{{ route('user.update', $dataUser->id) }}" method="POST">
                             @csrf
                             @method('PUT')
-                            <div class="row mb-4">
-                                <div class="col-lg-4 col-sm-6">
-                                    <!-- First Name -->
-                                    <div class="mb-3">
-                                        <label for="first_name" class="form-label">First name</label>
-                                        <input type="text" name="first_name" id="first_name" class="form-control"
-                                            required value="{{ $dataUser->first_name }}">
-                                    </div>
 
-                                    <!-- Last Name -->
-                                    <div class="mb-3">
-                                        <label for="last_name" class="form-label">Last name</label>
-                                        <input type="text" name="last_name" id="last_name" class="form-control"
-                                            required value="{{ $dataUser->last_name }}">
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-4 col-sm-6">
-                                    <!-- Birthday -->
-                                    <div class="mb-3">
-                                        <label for="birthday" class="form-label">Birthday</label>
-                                        <input type="date" name="birthday" id="birthday" class="form-control">
-                                    </div>
-
-                                    <!-- Gender -->
-                                    <div class="mb-3">
-                                        <label for="gender" class="form-label">Gender</label>
-                                        <select id="gender" name="gender" class="form-select">
-                                            <option selected="">-- Pilih --</option>
-                                            <option value="Male"
-                                                {{ $dataUser->gender == 'Male' ? 'Selected' : '' }}>Male</option>
-                                            <option value="Female"
-                                                {{ $dataUser->gender == 'Female' ? 'Selected' : '' }}>Female</option>
-                                            <option value="Other">Other</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-4 col-sm-12">
-                                    <!-- Email -->
-                                    <div class="mb-3">
-                                        <label for="email" class="form-label">Email</label>
-                                        <input type="text" name="email" id="email" class="form-control"
-                                            required value="{{ $dataUser->email }}">
-                                    </div>
-
-                                    <!-- Phone -->
-                                    <div class="mb-3">
-                                        <label for="phone" class="form-label">Phone</label>
-                                        <input type="text" name="phone" id="phone" class="form-control"
-                                            value="{{ $dataUser->phone }}">
-                                    </div>
-
-                                    <!-- Buttons -->
-                                    <div class="">
-                                        <button type="submit" class="btn btn-primary">Simpan</button>
-                                        <a href="{{ route('User.update', $dataUser->User_id) }}"
-                                            class="btn btn-outline-secondary ms-2">Batal</a>
-                                    </div>
-                                </div>
+                            <div class="mb-3">
+                                <label>Nama</label>
+                                <input type="text" name="name" value="{{ $dataUser->name }}"
+                                    class="form-control">
                             </div>
-                        </form>
+
+                            <div class="mb-3">
+                                <label>Email</label>
+                                <input type="email" name="email" value="{{ $dataUser->email }}"
+                                    class="form-control">
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Password (kosongkan jika tidak ingin ganti)</label>
+                                <input type="password" name="password" class="form-control">
+                            </div>
+                            {{-- PROFIL --}}
+                            <div class="text-center mb-4">
+                            @if ($dataUser->photo)
+                                <img src="{{ asset('storage/' . $dataUser->photo) }}" alt="Foto {{ $dataUser->name }}"
+                                    width="100" height="100" class="rounded-circle object-fit-cover mb-2">
+                            @else
+                                <img src="https://i.pravatar.cc/150?u={{ $dataUser->email }}" alt="Default Avatar"
+                                    width="100" height="100" class="rounded-circle object-fit-cover mb-2">
+                            @endif
+                            <p class="text-muted">Foto Profil Saat Ini</p>
                     </div>
+                    <button type="submit" class="btn btn-warning">Update</button>
+                    </form>
 
                 </div>
+
             </div>
+        </div>
         </div>
         <footer class="bg-white rounded shadow p-5 mb-4 mt-4">
             <div class="row">

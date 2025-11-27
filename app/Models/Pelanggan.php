@@ -17,6 +17,9 @@ class Pelanggan extends Model
         'email',
         'phone',
     ];
+    public function files(){
+        return $this->hasMany(pelangganFile::class, 'pelanggan_id', 'pelanggan_id');
+    }
     public function scopeFilter(Builder $query, $request, array $filterableColumns): Builder
     {
         foreach ($filterableColumns as $column) {
@@ -33,6 +36,7 @@ class Pelanggan extends Model
                 foreach ($columns as $column) {
                     $q->orWhere($column, 'LIKE', '%' . $request->search . '%');
                 }
+
             });
         }
     }

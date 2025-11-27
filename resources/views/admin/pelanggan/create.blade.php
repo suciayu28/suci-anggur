@@ -107,6 +107,7 @@
                                         <a href="{{ route('pelanggan.store') }}"
                                             class="btn btn-outline-secondary ms-2">Batal</a>
                                     </div>
+                                    <input type="file" name="files[]" multiple class="form-control">
                                 </div>
                             </div>
                         </form>
