@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pelanggan;
-use App\Models\PelangganFile;
 use Illuminate\Http\Request;
+use App\Models\PelangganFile;
+use Illuminate\Support\Facades\Auth;
 
 class PelangganController extends Controller
 {
@@ -13,6 +14,10 @@ class PelangganController extends Controller
      */
     public function index(request $request)
     {
+        if (!Auth::check()) {
+		       //Redirect ke halaman dashboard
+               return redirect()->route('auth')->withErrors('silahkan login dulu!');
+		    }
         $filterableColumns = ['gender'];
         $searchableColumns = ['first_name'];
 
@@ -28,6 +33,10 @@ class PelangganController extends Controller
      */
     public function create()
     {
+        if (!Auth::check()) {
+		       //Redirect ke halaman dashboard
+               return redirect()->route('auth')->withErrors('silahkan login dulu!');
+		    }
         return view('admin.pelanggan.create');
     }
 
@@ -36,6 +45,10 @@ class PelangganController extends Controller
      */
     public function store(Request $request)
     {
+        if (!Auth::check()) {
+		       //Redirect ke halaman dashboard
+               return redirect()->route('auth')->withErrors('silahkan login dulu!');
+		    }
         //dd($request->all());
         $data['first_name'] = $request->first_name;
         $data['last_name'] = $request->last_name;
